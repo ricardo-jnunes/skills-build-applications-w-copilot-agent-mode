@@ -6,12 +6,14 @@ import teamsRouter from './routes/teams';
 import activitiesRouter from './routes/activities';
 import leaderboardRouter from './routes/leaderboard';
 import workoutsRouter from './routes/workouts';
-import { getApiBaseUrl } from './utils/apiUrl';
 
 dotenv.config();
 
 const app = express();
 const port = Number(process.env.PORT || 8000);
+const apiBaseUrl = process.env.CODESPACE_NAME
+  ? `https://${process.env.CODESPACE_NAME}-8000.app.github.dev`
+  : 'http://localhost:8000';
 
 app.use(express.json());
 
@@ -20,7 +22,7 @@ app.get('/api/health', (_req, res) => {
 });
 
 app.get('/api/config', (_req, res) => {
-  res.json({ apiBaseUrl: getApiBaseUrl() });
+  res.json({ apiBaseUrl });
 });
 
 app.use('/api/users', usersRouter);
@@ -31,5 +33,5 @@ app.use('/api/workouts', workoutsRouter);
 
 app.listen(port, '0.0.0.0', () => {
   console.log(`OctoFit backend listening on port ${port}`);
-  console.log(`API base URL: ${getApiBaseUrl()}`);
+  console.log(`API base URL: ${apiBaseUrl}`);
 });
